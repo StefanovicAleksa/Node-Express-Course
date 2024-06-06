@@ -1,62 +1,16 @@
-// Async & Await
+// Event Emitter -> server
 
-const { readFile, writeFile } = require('fs'); //using let because it will be changed after
+const http = require('http');
 
-// Promise manual
-const getText = (path) => {
-    return new Promise((resolve, reject) => {
-        readFile(path, 'utf-8', (err, data) => {
-            if(err) {
-                reject(err);
-            } else {
-                resolve(data);
-            }
-        });
-    });
-}
+// Setting up server using event emitter api
+// Server is now an event listener and is treated as such
+const server = http.createServer();
 
-// using async & await
-const startPromiseManual = async() => {
-    try {
-        const first = await getText('./content/first.txt');
-        const second = await getText('./content/second.txt');
-        console.log(first, second);
-    } catch(err) {
-        console.error(err);
-    }
-}
+// handling requests
+server.on('request', (req, res) => {
+    res.end('Welcome');
+});
 
-// Turning function into promise with util.promisify
-const util = require('util');
-
-const readFilePromise = util.promisify(readFile);
-const writeFilePromise = util.promisify(writeFile);
-
-// using async & await
-const startPromisify = async() => {
-    try {
-        const first = await readFilePromise('./content/first.txt', 'utf-8');
-        const second = await readFilePromise('./content/second.txt', 'utf-8');
-        await writeFilePromise('./content/mind-grenade.txt', first + "\n" + second);
-        console.log(first, second);
-    } catch(err) {
-        console.error(err);
-    }
-}
-
-// Importing functions as promises
-const fs = require('fs').promises; // destructor syntax can also be used
-
-// using async & await
-const start = async() => {
-    try {
-        const first = await fs.readFile('./content/first.txt', 'utf-8');
-        const second = await fs.readFile('./content/second.txt', 'utf-8');
-        await fs.writeFile('./content/mind-grenade.txt', first + "\n" + second, {flag: 'a'});
-        console.log(first, second);
-    } catch(err) {
-        console.error(err);
-    }
-}
-
-start();
+server.listen(5000, () => {
+    console.log("Server listening on port: 5000...");
+});

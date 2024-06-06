@@ -27,8 +27,9 @@ readFile('./content/first.txt', 'utf-8', (err, result) => {
                     return
                 }
                 console.log('done with the task');
-            }
-        ); // Note that you cant append files with writeFile method when used as async.
+            },
+            {flag: 'a'}
+        );
     });
 });
 

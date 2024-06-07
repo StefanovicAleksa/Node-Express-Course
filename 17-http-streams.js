@@ -1,13 +1,16 @@
+// Streams -> File to Http
+
 const http = require('http');
 const fs = require('fs');
 
-const server = http.createServer((req, res) => {
+// Using file streams than filesync for reading/writing large files is better because the data is chunkedt 
+http.createServer((req, res) => {
     const fileStream = fs.createReadStream('./content/big.txt', {
         encoding: 'utf8'
     });
 
     fileStream.on('open', () => {
-        fileStream.pipe(res); // Piping the data from read stream to response
+        fileStream.pipe(res); // Piping the data from read stream to response. basically writing each chunk the read stream gets to the response
     });
 
     fileStream.on('error', (err) => {
@@ -16,6 +19,6 @@ const server = http.createServer((req, res) => {
     });
 });
 
-server.listen(5000, () => {
+http.listen(5000, () => {
     console.log('Server listening on port: 5000...')
 });
